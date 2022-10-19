@@ -1,11 +1,10 @@
 const isAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    return next()
-  } else {
-    res.status(401)
+  if (!req.isAuthenticated()) {
+    res.redirect('/api/auth/google')
     throw new Error('User not authorized')
-    next()
   }
+
+  next()
 }
 
 const isNotAuthenticated = (req, res, next) => {

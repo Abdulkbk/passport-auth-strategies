@@ -8,6 +8,7 @@ require('dotenv').config()
 const connectDB = require('./config/db')
 const passport = require('passport')
 const { getUserByEmail, getUserById } = require('./services/user.services')
+const { isAuthenticated } = require('./middlewares/auth.middleware')
 
 const port = process.env.PORT || 8000
 
@@ -18,6 +19,8 @@ connectDB()
 const app = express()
 
 // Setups
+app.set('view engine', 'ejs')
+app.set('views', './src/views')
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
@@ -35,6 +38,7 @@ app.use(
 app.use(passport.session())
 
 // Routes
+app.get('/', isAuthenticated, (req, res) => res.render('pages/index'))
 app.use('/api/auth', require('./routes/auth.routes'))
 // app.use('/api/user', require('./routes/user.routes'))
 

@@ -2,9 +2,18 @@ const asyncHandler = require('express-async-handler')
 const passport = require('passport')
 const { registerUser } = require('../services/user.services')
 
+// Local Strategy Controller
 const loginController = passport.authenticate('local', {
   successRedirect: '/api/auth/',
   failureRedirect: '/api/auth/signin',
+})
+
+// Google Strategy Controller
+const googleController = passport.authenticate('google', {
+  scope: ['profile', 'email', 'openid'],
+})
+const googleCallback = passport.authenticate('google', {
+  failureRedirect: '/api/auth/fail',
 })
 
 const logoutController = asyncHandler(async (req, res) => {
@@ -16,19 +25,25 @@ const logoutController = asyncHandler(async (req, res) => {
 })
 
 const signUpController = asyncHandler(async (req, res) => {
-  const { full_name, email, password } = req.body
+  const { displayName, emailId, password } = req.body
 
-  if (!full_name || !email || !password) {
+  if (!displayName || !emailId || !password) {
     res.status(400)
 
     throw new Error('All fields are required')
   }
 
-  const user = { full_name, email, password }
+  const user = { displayName, emailId, password }
 
   const newUser = await registerUser(user)
 
   res.status(201).json({ user: newUser })
 })
 
-module.exports = { loginController, signUpController, logoutController }
+module.exports = {
+  loginController,
+  signUpController,
+  logoutController,
+  googleController,
+  googleCallback,
+}
