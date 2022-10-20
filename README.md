@@ -22,4 +22,4 @@ The implementation consists of **two** strategies:
 5. Start the app
    `npm run dev`
 
-@Abdulkbk ❤️❤️❤️
+[@Abdulkbk](https://github.com/Abdulkbk) ❤️❤️❤️
